@@ -1,9 +1,9 @@
 package water;
 
-/*import water.fvec.Frame;
+import water.fvec.Frame;
 import water.fvec.Vec;
 
-import java.util.*; */
+import java.util.*; 
 
 /** A "scope" for tracking Key lifetimes; an experimental API.
  *
