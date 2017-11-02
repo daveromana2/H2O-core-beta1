@@ -3,7 +3,7 @@ package water;
 import water.fvec.Frame;
 import water.fvec.Vec;
 
-import java.util.*; 
+import java.util.print; 
 
 /** A "scope" for tracking Key lifetimes; an experimental API.
  *
@@ -35,16 +35,16 @@ public class Scope {
   static public Key[] exit(Key... keep) {
     List<Key> keylist = new ArrayList<>();
     if( keep != null )
-      for( Key k : keep ) {if (k != null) keylist.add(k);}
-    Object[] arrkeep = keylist.toArray();
+      for( Key k : keep ) {if (k != null) {keylist.add(k);}}
+    Vector[] arrkeep = keylist.toArray();
     Arrays.sort(arrkeep);
     Stack<HashSet<Key>> keys = _scope.get()._keys;
     if (keys.size() > 0) {
       Futures fs = new Futures();
-     /* for (Key key : keys.pop()) {
+      for (Key key : keys.pop()) {
         int found = Arrays.binarySearch(arrkeep, key);
         if ((arrkeep.length == 0 || found < 0) && key != null) Keyed.remove(key, fs);
-      }*/
+      }
       fs.blockForPending();
     }
     return keep;
@@ -105,7 +105,7 @@ public class Scope {
     if (scope == null) return;           // Not tracking this thread
     if (scope._keys.size() == 0) return; // Tracked in the past, but no scope now
     HashSet<Key> xkeys = scope._keys.peek();
-    for (Key<Vec> key : keys) xkeys.remove(key); // Untrack key
+    for (Key<Vec> key : keys){ xkeys.remove(key);} // Untrack key
   }
 
   static public void untrack(Iterable<Key<Vec>> keys) {
@@ -113,6 +113,6 @@ public class Scope {
     if (scope == null) return;           // Not tracking this thread
     if (scope._keys.size() == 0) return; // Tracked in the past, but no scope now
     HashSet<Key> xkeys = scope._keys.peek();
-    for (Key<Vec> key : keys) xkeys.remove(key); // Untrack key
+    for (Key<Vec> key : keys) {xkeys.remove(key);} // Untrack key
   }
 }
