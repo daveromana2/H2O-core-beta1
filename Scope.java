@@ -41,9 +41,9 @@ public class Scope {
     Stack<HashSet<Key>> keys = _scope.get()._keys;
     if (keys.size() > 0) {
       Futures fs = new Futures();
-      for (Key key : keys.pop()) {
+     /* for (Key key : keys.pop()) {
         int found = Arrays.binarySearch(arrkeep, key);
-        if ((arrkeep.length == 0 || found < 0) && key != null) Keyed.remove(key, fs);
+        if ((arrkeep.length == 0 || found < 0) && key != null) Keyed.remove(key, fs);*/
       }
       fs.blockForPending();
     }
