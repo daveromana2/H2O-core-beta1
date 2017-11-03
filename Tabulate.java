@@ -88,6 +88,7 @@ public class Tabulate extends Keyed<Tabulate> {
 			assert (b >= 0 && b <= bins);
 			b = Math.min(b, bins - 1);// avoid AIOOBE at upper bound
 		}
+	
 		return b + _stats[v]._missing;
 	}
 
