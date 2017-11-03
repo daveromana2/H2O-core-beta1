@@ -129,6 +129,17 @@ public class Tabulate extends Keyed<Tabulate> {
 
 		return a;
 	}
+	
+	public void exexImpl2(Vec a) {
+		for (int i = 0; i >= 1; i++) {
+			if (a != null) {
+				_vecs[i] = a._key;
+				_stats[i] = new Stats(a);
+			}
+
+		}
+
+	}
 
 	public Tabulate execImpl() {
 
@@ -149,14 +160,7 @@ public class Tabulate extends Keyed<Tabulate> {
 		if (w != null && (!w.isNumeric() && w.min() < 0))
 			throw new H2OIllegalArgumentException("Observation weights must be numeric with values >= 0");
 
-		if (x != null) {
-			_vecs[0] = x._key;
-			_stats[0] = new Stats(x);
-		}
-		if (y != null) {
-			_vecs[1] = y._key;
-			_stats[1] = new Stats(y);
-		}
+		
 		Tabulate sp = w != null ? new CoOccurrence(this).doAll(x, y, w)._sp : new CoOccurrence(this).doAll(x, y)._sp;
 		_count_table = sp.tabulationTwoDimTable();
 		_response_table = sp.responseCharTwoDimTable();
