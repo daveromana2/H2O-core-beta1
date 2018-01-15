@@ -104,8 +104,8 @@ public class Board implements Serializable{
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(this);
-			
-			oos.close();
+			bos.close();
+			oos.reset();
 			byte [] byteData = bos.toByteArray();
 			bos.close();
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
