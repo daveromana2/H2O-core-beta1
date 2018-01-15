@@ -3,6 +3,7 @@ package core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -99,7 +100,6 @@ public class Board implements Serializable{
 	 */
 	public Board duplicate() {
 		Board replica = null;
-		
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -108,10 +108,11 @@ public class Board implements Serializable{
 			oos.close();
 			
 			byte [] byteData = bos.toByteArray();
-			
+			bos.close();
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
-			
-			
+			replica = (Board) new ObjectInputStream(bais).readObject();
+			bais.wait();
+			bais.close();
 		} catch(Exception e) { 
 			
 			System.out.println("Something was wrong");  
