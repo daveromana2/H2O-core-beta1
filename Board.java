@@ -98,25 +98,24 @@ public class Board implements Serializable{
 	 * Duplicate of the board (the same as Python's "deep copy").
 	 * @return Board's replica as a new object.
 	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public Board duplicate() throws IOException {
+	public Board duplicate() throws IOException, ClassNotFoundException {
 		Board replica = null;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
-			
-			
-			byte [] byteData = bos.toByteArray();
+		
+		byte [] byteData = bos.toByteArray();
 			bos.reset();
+			
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+			replica = (Board) new ObjectInputStream(bais).readObject();
 			
-			
-		
-		
 		try {
 			oos.writeObject(this);		
-			oos.reset();
-			replica = (Board) new ObjectInputStream(bais).readObject();
-			bais.reset();
+			oos.close();
+			
+			bais.close();
 		} catch(Exception e) { 
 			
 			System.out.println("Something was wrong");  
