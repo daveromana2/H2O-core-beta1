@@ -77,6 +77,10 @@ public class Board implements Serializable{
 
 	}
 
+	public Board(Object readObject) {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * Make move on given field with given color if the field is not occupied.
 	 * @param filed Destination field.
@@ -100,26 +104,25 @@ public class Board implements Serializable{
 	 */
 	public Board duplicate() {
 		Board replica = null;
-		Board xyz = null;
 		try {
-			
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(this);
+			oos.flush();
 			oos.close();
+			bos.close();
 			byte [] byteData = bos.toByteArray();
+
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+			ObjectInputStream troia = new ObjectInputStream(bais);
+			troia.readObject();
 			
-			byteData.wait();
-			replica = (Board) new ObjectInputStream(bais).readObject();
-			bais.close();
-		} catch(Exception e) { 
-			
-			System.out.println("Something was wrong");  
-		
-		}
-		return xyz;
+			replica = (Board) new Board(troia.readObject());
+			troia.close();
+		} catch(Exception e) { e.printStackTrace(); }
+		return replica;
 	}
+
 
 	/**
 	 * Generate list of all valid moves for current position.
