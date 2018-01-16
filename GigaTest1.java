@@ -304,12 +304,10 @@ FileInputStream fisTest1 = null ;
 
 	//Report when games ended.
 	int value1_gt1_1000 = 1000;
-	//Append total outcome of the test case to the file.
-	BufferedWriter output1Test1 = null;
+	BufferedWriter output1Test1= null;
 	try {
-	
-	
-	output1Test1 = new BufferedWriter(
+	//Append total outcome of the test case to the file.
+	 output1Test1 = new BufferedWriter(
 			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
 	output1Test1.append("========================================");
 	output1Test1.newLine();
@@ -353,8 +351,8 @@ FileInputStream fisTest1 = null ;
 	output1Test1.newLine();
 
 	output1Test1.append("========================================");
-	output1Test1.close();
-	}  catch(Exception e) {
+	
+	} catch(Exception e)  {
 		System.err.println("Error occured during saving.");
 		System.out.println("Something was wrong");
 	}finally {
@@ -366,6 +364,7 @@ FileInputStream fisTest1 = null ;
                }	
            	}
 	}
+	
 }
 
 public static void newRandomBoardTwo1 (int testIndex, Board boardTest2, 
