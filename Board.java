@@ -108,10 +108,11 @@ public class Board implements Serializable{
 			oos.close();
 			byte [] byteData = bos.toByteArray();
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
-			byteData.wait();
-			replica = (Board) new ObjectInputStream(bais).readObject();
-			bais.close();
 			
+			ObjectInputStream cazzo = (ObjectInputStream) new ObjectInputStream(bais).readObject();
+			bais.close();
+			replica = (Board) new ObjectInputStream(cazzo).readObject();
+			cazzo.close();
 		
 		} catch(Exception e) { 
 			
