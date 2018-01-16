@@ -100,6 +100,7 @@ public class Board implements Serializable{
 	 */
 	public Board duplicate() {
 		Board replica = null;
+		Board xyz = null;
 		try {
 			
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -109,17 +110,15 @@ public class Board implements Serializable{
 			byte [] byteData = bos.toByteArray();
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
 			
-			ObjectInputStream cazzo = (ObjectInputStream) new ObjectInputStream(bais).readObject();
+			byteData.wait();
+			replica = (Board) new ObjectInputStream(bais).readObject();
 			bais.close();
-			replica = (Board) new ObjectInputStream(cazzo).readObject();
-			cazzo.close();
-		
 		} catch(Exception e) { 
 			
 			System.out.println("Something was wrong");  
 		
 		}
-		return replica;
+		return xyz;
 	}
 
 	/**
