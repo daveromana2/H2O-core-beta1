@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.*;
 
 import core.Board;
 
@@ -32,7 +33,7 @@ public class BoardGenerator {
 
 		//Save to the file.
 		FileOutputStream fos = new FileOutputStream("200_boards_3.sav");
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
 		try {
 			
 			oos.writeObject(boardCollection);
@@ -42,9 +43,9 @@ public class BoardGenerator {
 			System.err.println("Error occured during saving.");
 			System.out.println("Something was wrong");
 		}finally {
-	           if (oos != null) {
+	           if (fos != null) {
 	               try {
-	                 oos.close (); 
+	                 fos.close (); 
 	               } catch (java.io.IOException e3) {
 	                 System.out.println("I/O Exception");
 	               }
