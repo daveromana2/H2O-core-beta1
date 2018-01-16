@@ -114,12 +114,12 @@ public class Board implements Serializable{
 			byte [] byteData = bos.toByteArray();
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
-			ObjectInputStream troia = new ObjectInputStream(bais);
-			troia.readObject();
-			
-			replica = (Board) new Board(troia.readObject());
-			troia.close();
-		} catch(Exception e) { e.printStackTrace(); }
+			ObjectInputStream obduplicate = new ObjectInputStream(bais);			
+			replica = (Board) new Board(obduplicate.readObject());
+			obduplicate.close();
+		} catch(Exception e) { 
+			System.out.println("Something was wrong");  
+			}
 		return replica;
 	}
 
