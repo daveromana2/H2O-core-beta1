@@ -3,8 +3,8 @@ package newtest;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.IOException;
 
 import util.Tuple;
 
@@ -129,7 +129,6 @@ public static void testOne1 () throws Exception {
 	//Number of all moves that was made during the game.
 	int numberOfMoveTest1 = 0;
 	int value1_grt1_20000 = 20000; 
-	boolean value = true;
 	//Players participating in the test case.
 	Player[] playersTest1 =  {
 			new Player("MCTS_UCT", "MCTS_UCT", "w", value1_grt1_20000),
@@ -140,24 +139,15 @@ public static void testOne1 () throws Exception {
 	//terminate state or not (the game finishes when there is no empty 
 	//fields in the board).
 	int totalNumberOfMovesTest1 = 46;
-FileInputStream fisTest1 = null ;
+
 	//Load board.
 	try {
-		 fisTest1 = new FileInputStream("50_boards_3.sav");
+		FileInputStream fisTest1 = new FileInputStream("50_boards_3.sav");
 		ObjectInputStream oisTest1 = new ObjectInputStream(fisTest1);
 		boardCollectionTest1 = (Board[]) oisTest1.readObject();
 		oisTest1.close();
 	} catch(Exception e) {
 		System.err.println("Error" + e.getMessage());
-	} finally {
-		   if (fisTest1 != null) {
-               try {
-            	   fisTest1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-		
 	}
 
 	//The beginning and the end of the test.
@@ -167,22 +157,8 @@ FileInputStream fisTest1 = null ;
 	startTime = System.currentTimeMillis();
 	
 	//Define buffers.
-	BufferedWriter outputTest1 = null;
-	try {
-	 outputTest1 = new BufferedWriter(
+	BufferedWriter outputTest1 = new BufferedWriter(
 			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
-	} catch(Exception e) {
-		System.err.println("Error occured during saving.");
-		System.out.println("Something was wrong");
-	}finally {
-           if (outputTest1 != null) {
-               try {
-            	   outputTest1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-	}
 	MonteCarlo mc_t1 = new MonteCarlo(
 			boardTest1.duplicate(), 
 			playersTest1[currentIndexTest1].getColor(), 
@@ -274,36 +250,41 @@ FileInputStream fisTest1 = null ;
 					 e2DrawAsPlayer2,  e1DrawAsPlayer2,  e2DrawAsPlayer1);
 
 		} else {
-			
 			//One side wins the game.
-			OneSideWinsTheGame ( gameOutcome,  playersTest1 
-					, outputTest1,  value ,  e1TotalWins,
-					 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
-					 e2TotalWins,  e1TotalLoses, e2WinAsPlayer2,  e1LoseAsPlayer1 );
+			if(gameOutcome.equals(playersTest1[0].getColor())) {
+				//Player #1, whoever it is, wins the game.
+
+				//Add note about the winner to the file.
+				outputTest1.append("Result: " + playersTest1[0].getName() + " wins");
+
+				//Update statistics.
+				boolean valuePlayers1 = playersTest1[0].getName().equals("MCTS_H(5)");
+				updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
+						 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
+						 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
+
+			} else {
+				//Player #2, whoever it is, wins the game.
+
+				//Add note about the winner to the file.
+				outputTest1.append("Result: " + playersTest1[1].getName() + " wins");
+
+				//Update statistics.
+				boolean valuePlayers1 = playersTest1[1].getName().equals("MCTS_H(5)");
+				updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
+						 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
+						 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
+			}
+			outputTest1.newLine();
+			outputTest1.close();
 		}			
 	} //End of the test case. (for)
 
 	//Report when games ended.
 	int value1_gt1_1000 = 1000;
-	
-	
 	//Append total outcome of the test case to the file.
-	BufferedWriter output1Test1 = null;
-	try {
-	 output1Test1 = new BufferedWriter(
+	BufferedWriter output1Test1 = new BufferedWriter(
 			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
-	} catch(Exception e) {
-		System.err.println("Error occured during saving.");
-		System.out.println("Something was wrong");
-	}finally {
-           if (output1Test1 != null) {
-               try {
-            	   output1Test1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-	}
 	output1Test1.append("========================================");
 	output1Test1.newLine();
 	output1Test1.append("*Summary 3-point board 20k roll-outs*");
@@ -346,8 +327,7 @@ FileInputStream fisTest1 = null ;
 	output1Test1.newLine();
 
 	output1Test1.append("========================================");
-	
-	
+	output1Test1.close();
 	
 }
 
@@ -362,40 +342,6 @@ public static void newRandomBoardTwo1 (int testIndex, Board boardTest2,
 		boardTest2 = initialPositionTest2.duplicate();
 	}
 
-	
-}
-
-public static void OneSideWinsTheGame (String gameOutcome, Player[] playersTest1 
-		,BufferedWriter outputTest1, boolean value, int e1TotalWins,
-		int e2TotalLoses,int e1WinAsPlayer2, int e2LoseAsPlayer1,
-		int e2TotalWins, int e1TotalLoses, int e2WinAsPlayer2, int e1LoseAsPlayer1 ) throws IOException {
-	//One side wins the game.
-	if(gameOutcome.equals(playersTest1[0].getColor())) {
-		//Player #1, whoever it is, wins the game.
-
-		//Add note about the winner to the file.
-		outputTest1.append("Result: " + playersTest1[0].getName() + " wins");
-
-		//Update statistics.
-		boolean valuePlayers1 = playersTest1[0].getName().equals("MCTS_H(5)");
-		updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
-				 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
-				 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
-
-	} else {
-		//Player #2, whoever it is, wins the game.
-
-		//Add note about the winner to the file.
-		outputTest1.append("Result: " + playersTest1[1].getName() + " wins");
-
-		//Update statistics.
-		boolean valuePlayers1 = playersTest1[1].getName().equals("MCTS_H(5)");
-		updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
-				 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
-				 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
-	}
-	outputTest1.newLine();
-	outputTest1.close();
 	
 }
 
@@ -1607,51 +1553,63 @@ public static void testSix1 () throws Exception {
 	//Append total outcome of the test case to the file.
 	BufferedWriter output1Test6 = new BufferedWriter(
 			new FileWriter("results_20k_3b_MCTS_H(7)vMCTS_H(10).txt", true));
-	output1Test6.append("========================================");
-	output1Test6.newLine();
-	output1Test6.append("*Summary 20k roll-outs 3 point board*");
-	output1Test6.newLine();
-	output1Test6.append("Draw occurred: " + totalDraws);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) total wins: " + e2TotalWins);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) total wins: " + e1TotalWins);
-	output1Test6.newLine();
-	output1Test6.append("Play time: " + (endTimeTest6 - startTimeTest6)/value6_gt1_1000 + " seconds.");
-	output1Test6.newLine();
+	try{
+		output1Test6.append("========================================");
+		output1Test6.newLine();
+		output1Test6.append("*Summary 20k roll-outs 3 point board*");
+		output1Test6.newLine();
+		output1Test6.append("Draw occurred: " + totalDraws);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) total wins: " + e2TotalWins);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) total wins: " + e1TotalWins);
+		output1Test6.newLine();
+		output1Test6.append("Play time: " + (endTimeTest6 - startTimeTest6)/value6_gt1_1000 + " seconds.");
+		output1Test6.newLine();
 
-	//Write statistics for MCTS (UCT).
-	output1Test6.append("MCTS_H(7) wins as player #1 : " + e2WinAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) wins as player #2 : " + e2WinAsPlayer2);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) draws as player #1 : " + e2DrawAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) draws as player #2 : " + e2DrawAsPlayer2);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) loses as player #1 : " + e2LoseAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(7) loses as player #2 : " + e2LoseAsPlayer2);
-	output1Test6.newLine();
+		//Write statistics for MCTS (UCT).
+		output1Test6.append("MCTS_H(7) wins as player #1 : " + e2WinAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) wins as player #2 : " + e2WinAsPlayer2);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) draws as player #1 : " + e2DrawAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) draws as player #2 : " + e2DrawAsPlayer2);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) loses as player #1 : " + e2LoseAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(7) loses as player #2 : " + e2LoseAsPlayer2);
+		output1Test6.newLine();
 
-	//Write statistics for MCTS + H(5).
-	output1Test6.append("MCTS_H(10) wins as player #1 : " + e1WinAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) wins as player #2 : " + e1WinAsPlayer2);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) draws as player #1 : " + e1DrawAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) draws as player #2 : " + e1DrawAsPlayer2);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) loses as player #1 : " + e1LoseAsPlayer1);
-	output1Test6.newLine();
-	output1Test6.append("MCTS_H(10) loses as player #2 : " + e1LoseAsPlayer2);
-	output1Test6.newLine();
+		//Write statistics for MCTS + H(5).
+		output1Test6.append("MCTS_H(10) wins as player #1 : " + e1WinAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) wins as player #2 : " + e1WinAsPlayer2);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) draws as player #1 : " + e1DrawAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) draws as player #2 : " + e1DrawAsPlayer2);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) loses as player #1 : " + e1LoseAsPlayer1);
+		output1Test6.newLine();
+		output1Test6.append("MCTS_H(10) loses as player #2 : " + e1LoseAsPlayer2);
+		output1Test6.newLine();
 
-	output1Test6.append("========================================");
-	output1Test6.close();
+		output1Test6.append("========================================");
+		output1Test6.close();
 
-	
+	}catch (IOException ioe) {
+		System.out.println("There's an error");
+		}finally{
+			try{
+				if(output1Test6 != null)
+				output1Test6.close();
+				}catch(Exception ex){
+			       System.out.println("Error in closing the BufferedWriter"+ex);
+				
+				}
+			}
+			       
 }
 
 public static void updateStatisticsA1 (boolean value, int e1DrawAsPlayer1,
