@@ -3,6 +3,7 @@ package newtest;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import util.Tuple;
@@ -128,6 +129,7 @@ public static void testOne1 () throws Exception {
 	//Number of all moves that was made during the game.
 	int numberOfMoveTest1 = 0;
 	int value1_grt1_20000 = 20000; 
+	boolean value = true;
 	//Players participating in the test case.
 	Player[] playersTest1 =  {
 			new Player("MCTS_UCT", "MCTS_UCT", "w", value1_grt1_20000),
@@ -272,33 +274,12 @@ FileInputStream fisTest1 = null ;
 					 e2DrawAsPlayer2,  e1DrawAsPlayer2,  e2DrawAsPlayer1);
 
 		} else {
+			
 			//One side wins the game.
-			if(gameOutcome.equals(playersTest1[0].getColor())) {
-				//Player #1, whoever it is, wins the game.
-
-				//Add note about the winner to the file.
-				outputTest1.append("Result: " + playersTest1[0].getName() + " wins");
-
-				//Update statistics.
-				boolean valuePlayers1 = playersTest1[0].getName().equals("MCTS_H(5)");
-				updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
-						 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
-						 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
-
-			} else {
-				//Player #2, whoever it is, wins the game.
-
-				//Add note about the winner to the file.
-				outputTest1.append("Result: " + playersTest1[1].getName() + " wins");
-
-				//Update statistics.
-				boolean valuePlayers1 = playersTest1[1].getName().equals("MCTS_H(5)");
-				updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
-						 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
-						 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
-			}
-			outputTest1.newLine();
-			outputTest1.close();
+			OneSideWinsTheGame ( gameOutcome,  playersTest1 
+					, outputTest1,  value ,  e1TotalWins,
+					 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
+					 e2TotalWins,  e1TotalLoses, e2WinAsPlayer2,  e1LoseAsPlayer1 );
 		}			
 	} //End of the test case. (for)
 
@@ -381,6 +362,40 @@ public static void newRandomBoardTwo1 (int testIndex, Board boardTest2,
 		boardTest2 = initialPositionTest2.duplicate();
 	}
 
+	
+}
+
+public static void OneSideWinsTheGame (String gameOutcome, Player[] playersTest1 
+		,BufferedWriter outputTest1, boolean value, int e1TotalWins,
+		int e2TotalLoses,int e1WinAsPlayer2, int e2LoseAsPlayer1,
+		int e2TotalWins, int e1TotalLoses, int e2WinAsPlayer2, int e1LoseAsPlayer1 ) throws IOException {
+	//One side wins the game.
+	if(gameOutcome.equals(playersTest1[0].getColor())) {
+		//Player #1, whoever it is, wins the game.
+
+		//Add note about the winner to the file.
+		outputTest1.append("Result: " + playersTest1[0].getName() + " wins");
+
+		//Update statistics.
+		boolean valuePlayers1 = playersTest1[0].getName().equals("MCTS_H(5)");
+		updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
+				 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
+				 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
+
+	} else {
+		//Player #2, whoever it is, wins the game.
+
+		//Add note about the winner to the file.
+		outputTest1.append("Result: " + playersTest1[1].getName() + " wins");
+
+		//Update statistics.
+		boolean valuePlayers1 = playersTest1[1].getName().equals("MCTS_H(5)");
+		updateStatisticsB1 ( valuePlayers1,  e1TotalWins,
+				 e2TotalLoses, e1WinAsPlayer2,  e2LoseAsPlayer1,
+				 e2TotalWins,  e1TotalLoses,  e2WinAsPlayer2,  e1LoseAsPlayer1);
+	}
+	outputTest1.newLine();
+	outputTest1.close();
 	
 }
 
