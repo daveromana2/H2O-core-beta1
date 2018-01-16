@@ -140,49 +140,20 @@ public static void testOne1 () throws Exception {
 	//terminate state or not (the game finishes when there is no empty 
 	//fields in the board).
 	int totalNumberOfMovesTest1 = 46;
-	FileInputStream fisTest1 = null ;
-	//Load board.
-	try {
-		 fisTest1 = new FileInputStream("50_boards_3.sav");
-		ObjectInputStream oisTest1 = new ObjectInputStream(fisTest1);
-		boardCollectionTest1 = (Board[]) oisTest1.readObject();
-		oisTest1.close();
-	} catch(Exception e) {
-		System.err.println("Error" + e.getMessage());
-	} finally {
-		   if (fisTest1 != null) {
-               try {
-            	   fisTest1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-		
-	}
+	loadBoard ( boardCollectionTest1);
 
 	//The beginning and the end of the test.
 	long startTime = 0, endTime = 0;
 
 	//Report when games commenced.
 	startTime = System.currentTimeMillis();
+	String nameFile1 = "results_20k_3b_MCTS_UCTvMCTS_H(5).txt";
+	BufferedWriter outputTest1 = null;
 	
 	//Define buffers.
-	BufferedWriter outputTest1 = null;
-	try {
-	 outputTest1 = new BufferedWriter(
-			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
-	} catch(Exception e) {
-		System.err.println("Error occured during saving.");
-		System.out.println("Something was wrong");
-	}finally {
-           if (outputTest1 != null) {
-               try {
-            	   outputTest1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-	}
+	
+	defineBuffers ( outputTest1, nameFile1);
+	
 	MonteCarlo mc_t1 = new MonteCarlo(
 			boardTest1.duplicate(), 
 			playersTest1[currentIndexTest1].getColor(), 
@@ -287,65 +258,11 @@ public static void testOne1 () throws Exception {
 	int value1_gt1_1000 = 1000;
 	
 	
-	//Append total outcome of the test case to the file.
-	BufferedWriter output1Test1 = null;
-	try {
-	 output1Test1 = new BufferedWriter(
-			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
-	} catch(Exception e) {
-		System.err.println("Error occured during saving.");
-		System.out.println("Something was wrong");
-	}finally {
-           if (output1Test1 != null) {
-               try {
-            	   output1Test1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-	}
-	output1Test1.append("========================================");
-	output1Test1.newLine();
-	output1Test1.append("*Summary 3-point board 20k roll-outs*");
-	output1Test1.newLine();
-	output1Test1.append("Draw occurred: " + totalDraws);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT total wins: " + e2TotalWins);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) total wins: " + e1TotalWins);
-	output1Test1.newLine();
-	output1Test1.append("Play time: " + (endTime - startTime)/value1_gt1_1000 + " seconds.");
-	output1Test1.newLine();
-
-	//Write statistics for MCTS.
-	output1Test1.append("MCTS_UCT wins as player #1 : " + e2WinAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT wins as player #2 : " + e2WinAsPlayer2);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT draws as player #1 : " + e2DrawAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT draws as player #2 : " + e2DrawAsPlayer2);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT loses as player #1 : " + e2LoseAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_UCT loses as player #2 : " + e2LoseAsPlayer2);
-	output1Test1.newLine();
-
-	//Write statistics for Random AI.
-	output1Test1.append("MCTS_H(5) wins as player #1 : " + e1WinAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) wins as player #2 : " + e1WinAsPlayer2);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) draws as player #1 : " + e1DrawAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) draws as player #2 : " + e1DrawAsPlayer2);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) loses as player #1 : " + e1LoseAsPlayer1);
-	output1Test1.newLine();
-	output1Test1.append("MCTS_H(5) loses as player #2 : " + e1LoseAsPlayer2);
-	output1Test1.newLine();
-
-	output1Test1.append("========================================");
+	AppendTotalOutcome ( nameFile1,  totalDraws, 
+			 e2TotalWins,  e1TotalWins,  endTime , startTime,  value1_gt1_1000 
+			, e2WinAsPlayer1 ,  e2WinAsPlayer2,  e2DrawAsPlayer1,  e2DrawAsPlayer2
+			, e2LoseAsPlayer1,  e2LoseAsPlayer2,  e1WinAsPlayer1,  e1WinAsPlayer2 
+			, e1DrawAsPlayer1,  e1DrawAsPlayer2,  e1LoseAsPlayer1,  e1LoseAsPlayer2 );
 	
 	
 	
@@ -1899,6 +1816,116 @@ public static void updateStatisticsB1 (boolean value, int e1TotalWins,
 		e2WinAsPlayer2++;
 		e1LoseAsPlayer1++;
 	}
+	
+}
+
+public static void loadBoard (Board[] boardCollectionTest1) {
+	FileInputStream fisTest1 = null ;
+	//Load board.
+	try {
+		 fisTest1 = new FileInputStream("50_boards_3.sav");
+		ObjectInputStream oisTest1 = new ObjectInputStream(fisTest1);
+		boardCollectionTest1 = (Board[]) oisTest1.readObject();
+		oisTest1.close();
+	} catch(Exception e) {
+		System.err.println("Error" + e.getMessage());
+	} finally {
+		   if (fisTest1 != null) {
+               try {
+            	   fisTest1.close (); 
+               } catch (java.io.IOException e3) {
+                 System.out.println("I/O Exception");
+               }	
+           	}
+		
+		}
+	}
+
+public static  void defineBuffers (BufferedWriter output1Test1, String nameFile) {
+	
+	try {
+	 output1Test1 = new BufferedWriter(
+			new FileWriter(nameFile, true));
+	} catch(Exception e) {
+		System.err.println("Error occured during saving.");
+		System.out.println("Something was wrong");
+	}finally {
+           if (output1Test1 != null) {
+               try {
+            	   output1Test1.close (); 
+               } catch (java.io.IOException e3) {
+                 System.out.println("I/O Exception");
+               }	
+           	}
+	}
+	
+}
+
+public static void AppendTotalOutcome (String nameFile, int totalDraws, 
+		int e2TotalWins, int e1TotalWins, long endTime ,long startTime, int value1_gt1_1000 
+		,int e2WinAsPlayer1 , int e2WinAsPlayer2, int e2DrawAsPlayer1, int e2DrawAsPlayer2
+		,int e2LoseAsPlayer1, int e2LoseAsPlayer2, int e1WinAsPlayer1, int e1WinAsPlayer2 
+		,int e1DrawAsPlayer1, int e1DrawAsPlayer2, int e1LoseAsPlayer1, int e1LoseAsPlayer2 ) throws IOException {
+	
+	BufferedWriter output1Test1 = null;
+	try {
+	 output1Test1 = new BufferedWriter(
+			new FileWriter(nameFile, true));
+	} catch(Exception e) {
+		System.err.println("Error occured during saving.");
+		System.out.println("Something was wrong");
+	}finally {
+           if (output1Test1 != null) {
+               try {
+            	   output1Test1.close (); 
+               } catch (java.io.IOException e3) {
+                 System.out.println("I/O Exception");
+               }	
+           	}
+	}
+	output1Test1.append("========================================");
+	output1Test1.newLine();
+	output1Test1.append("*Summary 3-point board 20k roll-outs*");
+	output1Test1.newLine();
+	output1Test1.append("Draw occurred: " + totalDraws);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT total wins: " + e2TotalWins);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) total wins: " + e1TotalWins);
+	output1Test1.newLine();
+	output1Test1.append("Play time: " + (endTime - startTime)/value1_gt1_1000 + " seconds.");
+	output1Test1.newLine();
+
+	//Write statistics for MCTS.
+	output1Test1.append("MCTS_UCT wins as player #1 : " + e2WinAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT wins as player #2 : " + e2WinAsPlayer2);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT draws as player #1 : " + e2DrawAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT draws as player #2 : " + e2DrawAsPlayer2);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT loses as player #1 : " + e2LoseAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_UCT loses as player #2 : " + e2LoseAsPlayer2);
+	output1Test1.newLine();
+
+	//Write statistics for Random AI.
+	output1Test1.append("MCTS_H(5) wins as player #1 : " + e1WinAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) wins as player #2 : " + e1WinAsPlayer2);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) draws as player #1 : " + e1DrawAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) draws as player #2 : " + e1DrawAsPlayer2);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) loses as player #1 : " + e1LoseAsPlayer1);
+	output1Test1.newLine();
+	output1Test1.append("MCTS_H(5) loses as player #2 : " + e1LoseAsPlayer2);
+	output1Test1.newLine();
+
+	output1Test1.append("========================================");
+	
 	
 }
 
