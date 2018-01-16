@@ -307,20 +307,10 @@ FileInputStream fisTest1 = null ;
 	//Append total outcome of the test case to the file.
 	BufferedWriter output1Test1 = null;
 	try {
-	 output1Test1 = new BufferedWriter(
+	
+	
+	output1Test1 = new BufferedWriter(
 			new FileWriter("results_20k_3b_MCTS_UCTvMCTS_H(5).txt", true));
-	}  catch(Exception e) {
-		System.err.println("Error occured during saving.");
-		System.out.println("Something was wrong");
-	}finally {
-           if (outputTest1 != null) {
-               try {
-            	   outputTest1.close (); 
-               } catch (java.io.IOException e3) {
-                 System.out.println("I/O Exception");
-               }	
-           	}
-	}
 	output1Test1.append("========================================");
 	output1Test1.newLine();
 	output1Test1.append("*Summary 3-point board 20k roll-outs*");
@@ -364,7 +354,18 @@ FileInputStream fisTest1 = null ;
 
 	output1Test1.append("========================================");
 	output1Test1.close();
-	
+	}  catch(Exception e) {
+		System.err.println("Error occured during saving.");
+		System.out.println("Something was wrong");
+	}finally {
+           if (outputTest1 != null) {
+               try {
+            	   outputTest1.close (); 
+               } catch (java.io.IOException e3) {
+                 System.out.println("I/O Exception");
+               }	
+           	}
+	}
 }
 
 public static void newRandomBoardTwo1 (int testIndex, Board boardTest2, 
