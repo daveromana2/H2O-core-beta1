@@ -97,25 +97,19 @@ public class Board implements Serializable{
 	/**
 	 * Duplicate of the board (the same as Python's "deep copy").
 	 * @return Board's replica as a new object.
-	 * @throws Throwable 
 	 */
-	public Board duplicate() throws Throwable {
+	public Board duplicate() {
 		Board replica = null;
 		try {
+			
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(this);
-			oos.flush();
-			oos.close();
-			
 			byte [] byteData = bos.toByteArray();
-			bos.close();
 			ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+			byteData.wait();
 			replica = (Board) new ObjectInputStream(bais).readObject();
-			bais.reset();
 			bais.close();
-			replica.finalize();
-			replica.wait();
 			
 		
 		} catch(Exception e) { 
